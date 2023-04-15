@@ -1,24 +1,56 @@
 
+//variables
+
+let mes;
+let dias;
+let ingresoMensual;
+let alquiler, comida, transporte, servicios, comunicaciones, otro;
 let gastosFijos;
 let presupuestoDiario;
+let porcentajeAlquiler;
+let porcentajeComida;
+let porcentajeTransporte;
+let porcentajeServicios;
+let porcentajeComunicaciones;
+let porcentajeOtro;
+let ingresoDisponible;
+let mensaje;
+
+
+//funciones
 
 function sumarGastosFijos(alquiler, comida, transporte, servicios, comunicaciones, otro) {
     gastosFijos = alquiler + comida + transporte + servicios + comunicaciones + otro;
+}
+
+function calcularPorcentajes() {
+    porcentajeAlquiler = (alquiler / ingresoMensual) * 100;
+    porcentajeComida = (comida / ingresoMensual) * 100;
+    porcentajeTransporte = (transporte / ingresoMensual) * 100;
+    porcentajeServicios = (servicios / ingresoMensual) * 100;
+    porcentajeComunicaciones = (comunicaciones / ingresoMensual) * 100;
+    porcentajeOtro = (otro / ingresoMensual) * 100;
 }
 
 function calcularPresupuestoDiario(ingresoDisponible, dias) {
     presupuestoDiario = ingresoDisponible / dias;
 }
 
-// entrada de mes (no se como hacer para validar que sea un numero entero)
-let mes = parseInt(prompt("Ingresa el mes en formato numerico (por ejemplo, para enero ingresa 1, para febrero 2, etc.):"));
+
+// solicito al usuario la entrada de mes (esto lo pongo porque no sé cómo tomar la fecha del día y necesito el dato de cantidad de días del mes para calcular un presupuesto diario)
+
+mes = parseInt(prompt("Por favor, ingresá el mes en formato numérico \n (por ejemplo, para enero ingresa 1, para febrero 2, etc.):"));
+
+
+//valido el dato mes
 
 while (isNaN(mes) || mes < 1 || mes > 12){
     alert("Ingresaste un mes incorrecto");
-    mes = parseInt(prompt("Ingresa el mes en formato numerico (por ejemplo, para enero ingresa 1, para febrero 2, etc.):"));
+    mes = parseInt(prompt("Ingresá el mes en formato numérico \n (por ejemplo, para enero ingresa 1, para febrero 2, etc.):"));
 }
 
-let dias;
+
+// dependiendo del mes le asigno un valor a la variable día, usando un condicional 
 
 if (mes == 2) {
     dias = 28;
@@ -28,61 +60,87 @@ if (mes == 2) {
     dias = 31;
 }
 
-// entrada de ingreso mensual
-let ingresoMensual = Number(prompt("Ingresa tu ingreso mensual neto:"));
 
-// validación del dato
+// solicito al usuario la entrada de ingreso mensual
+
+ingresoMensual = Number(prompt("Colocá tu ingreso mensual neto/de bolsillo sin decimales y sin separar los miles \n (si tu ingreso es de $150.000, debés ingresar '150000'):"));
+
+
+// validación del dato ingreso mensual 
+// tanto acá como en la entrada de cada gasto fijo (que está a continuación) no sé cómo hacer 
+//para corregir si el usuario separa los miles con punto (a 50.000 lo toma como 50 coma cero)
+
 while (isNaN(ingresoMensual) || ingresoMensual <= 0) {
-    alert("Ingresa un número válido para tu ingreso mensual.");
-    ingresoMensual = Number(prompt("Ingresa tu ingreso mensual neto:"));
+    alert("Ingresá un número válido para tu ingreso mensual.");
+    ingresoMensual = Number(prompt("Colocá tu ingreso mensual neto/de bolsillo sin decimales y sin separar los miles \n (si tu ingreso es de $150.000, debés ingresar '150000'):"));
 }
 
-// entrada de gastos fijos del mes, como alquiler, comida, transporte, etc. 
-let alquiler, comida, transporte, servicios, comunicaciones, otro;
-
 // solicitar la entrada del usuario para cada variable de gasto hasta que se proporcione un valor válido
+
 do {
-    alquiler = Number(prompt("Ingresa tu gasto en alquiler:"));
+    alquiler = Number(prompt("Ingresá tu gasto en alquiler:"));
 } while (isNaN(alquiler) || alquiler < 0);
 
 do {
-    comida = Number(prompt("Ingresa tu gasto estimado en supermercado:"));
+    comida = Number(prompt("Ingresá tu gasto estimado en supermercado:"));
 } while (isNaN(comida) || comida < 0);
 
 do {
-    transporte = Number(prompt("Ingresa tu gasto en transporte (por ejemplo transporte publico o combustible):"));
+    transporte = Number(prompt("Ingresa tu gasto estimado en movilidad (por ejemplo, transporte publico o combustible):"));
 } while (isNaN(transporte) || transporte < 0);
 
 do {
-    servicios = Number(prompt("Ingresa tu gasto en servicios esenciales (luz, agua y gas)"));
+    servicios = Number(prompt("Ingresá tu gasto en servicios esenciales (luz, agua y gas)"));
 } while (isNaN(servicios) || servicios < 0);
 
 do {
-    comunicaciones = Number(prompt("Ingresa tu gasto en comunicaciones (telefono, cable, internet)"));
+    comunicaciones = Number(prompt("Ingresá tu gasto en comunicaciones (teléfono, cable, internet)"));
 } while (isNaN(comunicaciones) || comunicaciones < 0);
 
 do {
-    otro = Number(prompt("Ingresa la suma de otros gastos fijos"));
+    otro = Number(prompt("Ingresá la suma de otros gastos fijos (tarjeta, impuestos, seguros)"));
 } while (isNaN(otro) || otro < 0);
+
+
+// En Argentina ningún gasto fijo es fijo jaja, asi que cuando digo "gasto fijo" me refiero a gastos obligatorios, 
+//que uno hace cada mes, pero por la inflación es imposible saber exactamente, por eso uso tanto la palabra "estimado".
+//Cuando aprendamos cómo hacer para que el usuario interactúe en un form o algo más amigable que un prompt voy a
+//repensar las variables de los gastos y reclasificar, pero ahora no queria poner muchos 
+//porque iba a ser re denso completar 700 prompt jaja. 
+//La app me la imagino con un botón de "agregar gasto", y ahí seleccionás de qué categoría y el monto.
+//y un botón de eliminar un gasto creado, etc. 
 
 sumarGastosFijos(alquiler, comida, transporte, servicios, comunicaciones, otro);
 
-alert(`Tus gastos fijos suman $${gastosFijos.toFixed(2)}`);
+calcularPorcentajes();
 
-alert("Presiona 'Aceptar' para conocer el dinero que te queda disponible y tu presupuesto diario");
+alert(`Tus gastos fijos suman $${gastosFijos.toFixed(2)}
 
+En relación a tu ingreso representan los siguientes porcentajes:
+
+Alquiler: ${porcentajeAlquiler.toFixed(2)}%
+Comida: ${porcentajeComida.toFixed(2)}%
+Transporte: ${porcentajeTransporte.toFixed(2)}%
+Servicios: ${porcentajeServicios.toFixed(2)}%
+Comunicaciones: ${porcentajeComunicaciones.toFixed(2)}%
+Otros: ${porcentajeOtro.toFixed(2)}%;
+
+Presioná 'Aceptar' para conocer el dinero que te queda disponible y el presupuesto diario para este mes`);
 
 // resta el total de gastos del ingreso mensual para obtener el ingreso disponible después de pagar los gastos fijos.
-let ingresoDisponible = ingresoMensual - gastosFijos;
+ingresoDisponible = ingresoMensual - gastosFijos;
 
 //calcular el presupuesto diario de acuerdo a la cantidad de dias del mes
 calcularPresupuestoDiario(ingresoDisponible, dias);
 
 // muestra el resultado al usuario utilizando la función alert.
-let mensaje = `Tu ingreso disponible después de pagar tus gastos fijos es de $${ingresoDisponible.toFixed(2)}.
-Tu presupuesto diario es de $${presupuestoDiario.toFixed(2)}`;
+mensaje = `Tu ingreso disponible después de pagar tus gastos fijos es de $${ingresoDisponible.toFixed(2)}.
+
+Tu presupuesto diario es de $${presupuestoDiario.toFixed(2)}
+
+No te preocupes; siempre que llovió, paró. Ya vendrán tiempos mejores.`;
+
 alert(mensaje);
 
 
 
-    // Quiero agregar una funcion que calcule que porcentaje del ingreso corresponde a cada tipo de gasto
